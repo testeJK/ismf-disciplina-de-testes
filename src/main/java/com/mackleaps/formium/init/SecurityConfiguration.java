@@ -64,8 +64,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             http
                 .antMatcher("/**")
                 .authorizeRequests()
-                    .antMatchers("/api/**","/register*","/password/recovery*","/index")
-                        .permitAll()
+                    .antMatchers("/api/**","/register*","/password/recovery*","/index", "/h2-console/**")
+                        .permitAll().and().authorizeRequests()
                     .antMatchers("/system/**")
                         .hasRole("RESEARCHER")
                     .antMatchers("/answer/**")
@@ -100,9 +100,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     
                 .and()
                 	.exceptionHandling().accessDeniedPage("/403")
-                	
+
                 .and()
-                	.csrf();
+                    .csrf()
+                    .ignoringAntMatchers("/h2-console/**");
+
+                http.headers().frameOptions().disable();
         }
 
     @Bean
